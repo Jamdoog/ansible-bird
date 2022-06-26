@@ -148,4 +148,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was created by James Ledger, I write about things on https://jamesledger.net
