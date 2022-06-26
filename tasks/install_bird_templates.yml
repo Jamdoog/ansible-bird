@@ -19,7 +19,21 @@
   ansible.builtin.service:
     name: bird6
     state: started
- 
+
+- name: Check if shared folder exists
+  tags: install
+  stat:
+    path: /etc/bird/shared
+  register: shared
+
+- name: Create shared folder if not present
+  tags: install
+  file:
+    state: directory
+    path: /etc/bird/shared
+    mode: 0644
+  when: shared.stat.exists == false
+
 - name: Configure shared/config.conf Template
   tags: configure
   template:
