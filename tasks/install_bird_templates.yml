@@ -70,7 +70,20 @@
     group: bird
   notify: bird_reconfig
 
+- name: Check if peers folder is present
+  tags: install
+  stat:
+    path: /etc/bird/ipv6/peers
+  register: peers
 
+- name: Create peers folder if it does not exist
+  tags: install
+  file:
+    state: directory
+    path: /etc/bird/ipv6/peers
+    mode: 0644
+  when: peers.stat.exists == false
+  
 - name: Configure ipv6/peers/transit.conf Template
   tags: configure
   template:
