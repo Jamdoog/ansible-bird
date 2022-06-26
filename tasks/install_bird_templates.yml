@@ -31,7 +31,7 @@
   file:
     state: directory
     path: /etc/bird/shared
-    mode: 0644
+    mode: 0755
   when: shared.stat.exists == false
 
 - name: Configure shared/config.conf Template
@@ -81,7 +81,7 @@
   file:
     state: directory
     path: /etc/bird/ipv6/peers
-    mode: 0644
+    mode: 0755
   when: peers.stat.exists == false
   
 - name: Configure ipv6/peers/transit.conf Template
