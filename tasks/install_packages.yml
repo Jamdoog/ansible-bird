@@ -1,0 +1,11 @@
+    - name: Install Packages
+      tags: install
+      ansible.builtin.apt:
+        pkg:
+        - curl
+        - bird
+        - nload
+        - net-tools
+        - htop
+        - rsync
+        - mtr

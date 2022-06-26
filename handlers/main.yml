@@ -1,0 +1,11 @@
+- name: bird_reconfig
+  tags: reconfig
+  ansible.builtin.command:
+    cmd: "birdc6 c"
+
+- name: interfaces
+  tags: interfaces
+  command:
+    cmd: "ifup lo:{{ item }}"
+  loop: "{{ loopback_interfaces }}"
+
