@@ -3,6 +3,13 @@
   ansible.builtin.command:
     cmd: "birdc6 c"
 
+- name: bird_service
+  service: 
+    name: bird6
+    state: restarted
+    enabled: yes
+  notify: bird_reconfig
+
 - name: interfaces
   tags: interfaces
   command:

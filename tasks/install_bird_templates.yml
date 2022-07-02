@@ -35,7 +35,7 @@
     dest: /etc/bird/shared/config.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Configure shared/filters.conf Template
   tags: configure
@@ -44,7 +44,7 @@
     dest: /etc/bird/shared/filters.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Configure shared/protocols.conf Template
   tags: configure
@@ -53,7 +53,7 @@
     dest: /etc/bird/shared/protocols.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Configure ./bird6.conf Template
   tags: configure
@@ -62,7 +62,7 @@
     dest: /etc/bird/bird6.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Check if peers folder is present
   tags: install
@@ -85,7 +85,7 @@
     dest: /etc/bird/ipv6/peers/transit.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Configure ipv6/peers/static.conf Template
   tags: configure
@@ -94,7 +94,7 @@
     dest: /etc/bird/ipv6/peers/static.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
+  notify: bird_service
 
 - name: Configure ipv6/prefixes/mynet.conf Template
   tags: configure
@@ -103,11 +103,4 @@
     dest: /etc/bird/ipv6/prefixes/mynet.conf
     owner: bird
     group: bird
-  notify: bird_reconfig
-
-- name: Start BIRD6 Service
-  service: 
-    name: bird6
-    state: restarted
-    enabled: yes
-  notify: bird_reconfig
+  notify: bird_service
