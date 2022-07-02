@@ -14,4 +14,4 @@
     path: /etc/bird/links.conf
     line: 'interface "{{ item.key }}"   { type pointopoint; hello 12; dead 46; cost {{ item.value }}; bfd on; };'
   with_dict: "{{ ADJACENT_ROUTERS }}"
-  notify: bird_reconfig
+  notify: bird_service
