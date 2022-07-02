@@ -14,12 +14,6 @@
     group: bird
     recurse: yes
 
-- name: Start Bird6 Service
-  tags: install
-  ansible.builtin.service:
-    name: bird6
-    state: started
-
 - name: Check if shared folder exists
   tags: install
   stat:
@@ -110,4 +104,3 @@
     owner: bird
     group: bird
   notify: bird_reconfig
-
