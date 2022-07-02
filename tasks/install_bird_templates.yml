@@ -104,3 +104,10 @@
     owner: bird
     group: bird
   notify: bird_reconfig
+
+- name: Start BIRD6 Service
+  service: 
+    name: bird6
+    state: restarted
+    enabled: yes
+  notify: bird_reconfig
