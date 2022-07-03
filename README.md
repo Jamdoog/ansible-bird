@@ -51,8 +51,10 @@ Role Variables
 |STATICCONFIG    | string  | static.conf       |
 |MYNETCONFIG     | string  | mynet.conf        |
 |PFXMIN          | int     | 48                |
+|SUBNET          | string  | 10.40.0.0/16
 |loopback_interfaces| list | - 1\n- 2\n-3      |
 |sysctl_config   | dictionary| net.ipv4.ip_forward: 1|
+
 
 ### Host Vars:
 
@@ -130,6 +132,7 @@ PLAYBOOK:
     STATICCONFIG: "static.conf"
     MYNETCONFIG: "mynet.conf"    
     PFXMIN: "48"
+    SUBNET: "10.40.0.0/16"
     loopback_interfaces:
       - 1
       - 2
