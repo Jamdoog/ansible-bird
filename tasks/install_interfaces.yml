@@ -21,12 +21,12 @@
     group: root
   notify: interfaces
 
-- name: Deploy GRE Tunnels
-  template:
-    src: "gre.conf"
-    dest: "/etc/network/interfaces.d/{{ item }}.conf"
-    owner: root
-    group: root
-  loop: "{{ lookup('inventory_hostnames', 'all', wantlist=True) }}"
-  loop_control:
-    extended: yes
+#- name: Deploy GRE Tunnels
+#  template:
+#    src: "gre.conf"
+#    dest: "/etc/network/interfaces.d/{{ item }}.conf"
+#    owner: root
+#    group: root
+#  loop: "{{ lookup('inventory_hostnames', 'all', wantlist=True) }}"
+#  loop_control:
+#    extended: yes

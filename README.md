@@ -3,6 +3,8 @@ Ansible Role: Bird
 
 This is a very "proprietary" role that will configure a server for BGP routing with a pre-configured transit. For now, it is IPv6 only. 
 
+This bird config was created by Wim. All credits goes to him. He runs alot of services, for example forhosting.nl or AS38230.
+
 What this does
 ---------------
 
@@ -30,7 +32,7 @@ I may fix these with time, tunnels for OSPF neighbors seems very hard.
 Requirements
 ------------
 
-A system running Debian 10/10. 
+A system running Debian 10/11/12. 
 
 If you intend to use the OSPF configuration, it will need links created (either VPN or physical) with the name of the interface corresponding to the ADJACENT_ROUTERS dictionary
 
@@ -69,6 +71,8 @@ Role Variables
 |ADJACENT_ROUTERS| dictionary|at1: 6\nat2: 7   |
 |COMMUNITIES | multi-line string| bgp_path.prepend(136918)|
 |COMMUNITIES_ANYCAST | multi-line string | bgp_path.prepend(136918)|
+|CUSTOM_STATIC | multi-line string | route <prefix> via <address>;|
+|CUSTOM_TRANSIT | multi-line string | multihop 2;|
 
 Dependencies
 ------------
@@ -93,6 +97,7 @@ HOST FILE:
             AMS: 6
             FRA: 5
             SGP: 100
+          CUSTOM_STATIC: 
           COMMUNITIES: 
           COMMUNITIES_ANYCAST:  |
             bgp_path.prepend(136918);

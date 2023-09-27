@@ -14,19 +14,12 @@
     group: bird
     recurse: yes
 
-- name: Check if shared folder exists
-  tags: install
-  stat:
-    path: /etc/bird/shared
-  register: shared
-
 - name: Create shared folder if not present
   tags: install
   file:
     state: directory
     path: /etc/bird/shared
     mode: 0755
-  when: shared.stat.exists == false
 
 - name: Configure shared/config.conf Template
   tags: configure
@@ -64,19 +57,12 @@
     group: bird
   notify: bird_service
 
-- name: Check if peers folder is present
-  tags: install
-  stat:
-    path: /etc/bird/ipv6/peers
-  register: peers
-
 - name: Create peers folder if it does not exist
   tags: install
   file:
     state: directory
     path: /etc/bird/ipv6/peers
     mode: 0755
-  when: peers.stat.exists == false
   
 - name: Configure ipv6/peers/transit.conf Template
   tags: configure
