@@ -63,7 +63,23 @@
     state: directory
     path: /etc/bird/ipv6/peers
     mode: 0755
-  
+
+- name: Create prefixes folder if it does not exist
+  tags: install
+  file:
+    state: directory
+    path: /etc/bird/ipv6/prefixes
+    mode: 0755
+
+- name: Configure ipv6/prefixes/anycast.conf Template
+  tags: configure
+  template:
+    src: "{{ ANYCASTCONFIG }}"
+    dest: /etc/bird/ipv6/prefixes/anycast.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
 - name: Configure ipv6/peers/transit.conf Template
   tags: configure
   template:

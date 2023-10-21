@@ -26,7 +26,6 @@ I may fix these with time, tunnels for OSPF neighbors seems very hard.
 - IPv6 Only
 - Won't create tunnels for OSPF neighbors
 - Won't create IBGP sessions
-- Hardcoded certain values such as anycast addresses
 - Requires you to list the number of loopback interfaces `loopback_interfaces` in this example 1 through 4 as there are 4 interfaces in `templates/bgp_interfaces.conf`
 
 Requirements
@@ -52,6 +51,7 @@ Role Variables
 |TRANSITCONFIG   | string  | transit.conf      |
 |STATICCONFIG    | string  | static.conf       |
 |MYNETCONFIG     | string  | mynet.conf        |
+|ANYCASTCONFIG   | string  | anycast.conf
 |PFXMIN          | int     | 48                |
 |SUBNET          | string  | 10.40.0.0/16
 |loopback_interfaces| list | - 1\n- 2\n-3      |
@@ -64,11 +64,13 @@ Role Variables
 |--------|---------|-------------|
 |TRANSITIP| string | 2600::      |
 |MYIP    | string  | 2a0e:46c4:22a2::|
+|MYNET   | multi-line string | 2a05:1082:5::/48, 2a0e:46c4:2269::/48, ... |
 |TRANSITASN| string| 34927       |
 |TRANSIT_NAME|string| iFog       |
 |ROUTERID   | string | 10.51.1.3 |
 |NODEID   | int     | 3          |
 |ADJACENT_ROUTERS| dictionary|at1: 6\nat2: 7   |
+|ANYCAST_ADDRESSES | multi-line string | 2a05:1082:5::/48, 2a05:1082:1::/48 |
 |COMMUNITIES | multi-line string| bgp_path.prepend(136918)|
 |COMMUNITIES_ANYCAST | multi-line string | bgp_path.prepend(136918)|
 |CUSTOM_STATIC | multi-line string | route <prefix> via <address>;|
