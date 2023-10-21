@@ -70,7 +70,7 @@ Role Variables
 |ROUTERID   | string | 10.51.1.3 |
 |NODEID   | int     | 3          |
 |ADJACENT_ROUTERS| dictionary|at1: 6\nat2: 7   |
-|ANYCAST_ADDRESSES | multi-line string | 2a05:1082:5::/48, 2a05:1082:1::/48 |
+|ANYCAST_ADDRESS | multi-line string | 2a05:1082:5::/48, 2a05:1082:1::/48 |
 |COMMUNITIES | multi-line string| bgp_path.prepend(136918)|
 |COMMUNITIES_ANYCAST | multi-line string | bgp_path.prepend(136918)|
 |CUSTOM_STATIC | multi-line string | route <prefix> via <address>;|
