@@ -13,6 +13,6 @@
 - name: interfaces
   tags: interfaces
   command:
-    cmd: "ifup lo:{{ item }}"
-  loop: "{{ loopback_interfaces }}"
+    cmd: "ifup lo:{{ loop.index }}"
+  loop: "{{ ANYCAST_ADDRESS }}"
 
