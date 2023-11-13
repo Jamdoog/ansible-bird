@@ -10,3 +10,4 @@
         - rsync
         - mtr-tiny
         - vim
+        - traceroute
