@@ -79,6 +79,7 @@
     owner: bird
     group: bird
   notify: bird_service
+  when: not ENABLE_ANYCAST
 
 - name: Configure ipv6/peers/transit.conf Template
   tags: configure
