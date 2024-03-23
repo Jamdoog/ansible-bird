@@ -18,3 +18,9 @@
   loop_control:
     index_var: ANYCAST_LOOP
 
+- name: sshd_restart
+  service:
+    name: sshd
+    state: restarted
+    enabled: yes
+    

@@ -8,3 +8,22 @@
     state: present
     reload: yes
   with_dict: "{{ sysctl_config }}"
+
+- name: Create banner base
+  set_fact:
+    BANNER_MOTD: "{{ ROUTERASN }} James Ledger"
+
+- name: Add location if present
+  set_fact:
+    BANNER_MOTD: "{{ BANNER_MOTD }} {{ ROUTERLOCATION }}"
+  when: ROUTERLOCATION is defined
+
+- name: Set banner
+  shell: "figlet -w 150 -c {{ BANNER_MOTD }} > /etc/motd"
+
+- name: Ensure motd is enabled in sshd
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    line: "PrintMotd yes"
+  notify: sshd_restart
