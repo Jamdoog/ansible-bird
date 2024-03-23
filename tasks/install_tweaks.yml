@@ -11,7 +11,7 @@
 
 - name: Create banner base
   set_fact:
-    BANNER_MOTD: "{{ ROUTERASN }} James Ledger"
+    BANNER_MOTD: "AS{{ ROUTERASN }} James Ledger"
 
 - name: Add location if present
   set_fact:
