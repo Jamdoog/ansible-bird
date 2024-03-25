@@ -19,11 +19,20 @@
   when: ROUTERLOCATION is defined
 
 - name: Set banner
-  shell: "figlet -w 150 -c {{ BANNER_MOTD }} > /etc/motd"
+  shell: "figlet -w 115 -c {{ BANNER_MOTD }} > /etc/motd"
 
-- name: Ensure motd is enabled in sshd
+- name: Ensure MOTD is enabled in sshd
   lineinfile:
     path: /etc/ssh/sshd_config
     state: present
     line: "PrintMotd yes"
   notify: sshd_restart
+
+- name: Ensure pam isn't printing MOTD
+  lineinfile:
+    path: /etc/pam.d/sshd
+    state: absent
+    line: "{{ item }}"
+  loop:
+    - "session    optional     pam_motd.so  motd=/run/motd.dynamic"
+    - "session    optional     pam_motd.so noupdate"
