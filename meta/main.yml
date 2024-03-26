@@ -1,7 +1,7 @@
 galaxy_info:
   author: James Ledger
   description: A ansible role to automatically deploy a BIRID BGP router
-  company: 
+  company: N/A
   role_name: bird
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -17,7 +17,7 @@ galaxy_info:
   # - CC-BY-4.0
   license: "license (BSD, MIT)"
 
-  min_ansible_version: 2.4
+  min_ansible_version: "2.4"
 
   # If this a Container Enabled role, provide the minimum Ansible Container version.
   # min_ansible_container_version:
@@ -33,6 +33,7 @@ galaxy_info:
       versions:
         - buster
         - bullseye
+        - bookworm
 
   galaxy_tags: 
     - bird

@@ -1,14 +1,19 @@
-    - name: Install Packages
-      tags: install
-      ansible.builtin.apt:
-        pkg:
-        - curl
-        - bird
-        - nload
-        - net-tools
-        - htop
-        - rsync
-        - mtr-tiny
-        - vim
-        - traceroute
-        - figlet
+- name: Remove BIRD1
+  apt:
+    pkg: bird
+    state: absent
+
+- name: Install Packages
+  tags: install
+  apt:
+    pkg:
+    - curl
+    - bird2
+    - nload
+    - net-tools
+    - htop
+    - rsync
+    - mtr-tiny
+    - vim
+    - traceroute
+    - figlet

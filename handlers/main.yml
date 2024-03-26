@@ -1,11 +1,11 @@
 - name: bird_reconfig
   tags: reconfig
   ansible.builtin.command:
-    cmd: "birdc6 c"
+    cmd: "/sbin/birdc c"
 
 - name: bird_service
   service: 
-    name: bird6
+    name: bird
     state: restarted
     enabled: yes
   notify: bird_reconfig

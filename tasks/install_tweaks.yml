@@ -19,7 +19,7 @@
   when: ROUTERLOCATION is defined
 
 - name: Set banner
-  shell: "figlet -w 115 -c {{ BANNER_MOTD }} > /etc/motd"
+  shell: "/bin/figlet -w 115 -c {{ BANNER_MOTD }} > /etc/motd"
 
 - name: Ensure MOTD is enabled in sshd
   lineinfile:
