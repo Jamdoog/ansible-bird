@@ -10,17 +10,11 @@
     enabled: yes
   notify: bird_reconfig
 
-- name: interfaces
-  tags: interfaces
-  command:
-    cmd: "ifup lo:{{ ANYCAST_LOOP }}"
-  loop: "{{ ANYCAST_ADDRESS }}"
-  loop_control:
-    index_var: ANYCAST_LOOP
-
 - name: sshd_restart
   service:
     name: sshd
     state: restarted
     enabled: yes
     
+- name: reboot
+  reboot:
