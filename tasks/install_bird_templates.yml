@@ -24,6 +24,15 @@
     group: bird
   notify: bird_service
 
+- name: Configure templates.conf Template
+  tags: configure
+  template:
+    src: "templates.conf"
+    dest: /etc/bird/templates.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
 - name: Configure protocols.conf Template
   tags: configure
   template:
