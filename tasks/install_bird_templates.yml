@@ -1,109 +1,69 @@
 - name: Copy Files
   tags: install
-  ansible.builtin.copy:
+  copy:
     src: .
     dest: /etc/bird/
     owner: bird
     group: bird
-  
+
+- name: Configure variables.conf Template
+  tags: configure
+  template:
+    src: "variables.conf"
+    dest: /etc/bird/variables.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
+- name: Configure filters.conf Template
+  tags: configure
+  template:
+    src: "filters.conf"
+    dest: /etc/bird/filters.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
+- name: Configure templates.conf Template
+  tags: configure
+  template:
+    src: "templates.conf"
+    dest: /etc/bird/templates.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
+- name: Configure protocols.conf Template
+  tags: configure
+  template:
+    src: "protocols.conf"
+    dest: /etc/bird/protocols.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
+- name: Configure communities.conf Template
+  tags: configure
+  template:
+    src: "communities.conf"
+    dest: /etc/bird/communities.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
+- name: Configure bird.conf Template
+  tags: configure
+  template:
+    src: "bird.conf"
+    dest: /etc/bird/bird.conf
+    owner: bird
+    group: bird
+  notify: bird_service
+
 - name: Set Bird Permissions
   tags: install
-  ansible.builtin.file:
+  file:
     path: /etc/bird
     owner: bird
     group: bird
     recurse: yes
-
-- name: Create shared folder if not present
-  tags: install
-  file:
-    state: directory
-    path: /etc/bird/shared
-    mode: 0755
-
-- name: Configure shared/config.conf Template
-  tags: configure
-  template:
-    src: "{{ SHARECONFIG }}"
-    dest: /etc/bird/shared/config.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Configure shared/filters.conf Template
-  tags: configure
-  template:
-    src: "{{ FILTERSCONFIG }}"
-    dest: /etc/bird/shared/filters.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Configure shared/protocols.conf Template
-  tags: configure
-  template:
-    src: "{{ PROTOCOLSCONFIG }}"
-    dest: /etc/bird/shared/protocols.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Configure ./bird6.conf Template
-  tags: configure
-  template:
-    src: "{{ BIRDCONFIG }}"
-    dest: /etc/bird/bird6.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Create peers folder if it does not exist
-  tags: install
-  file:
-    state: directory
-    path: /etc/bird/ipv6/peers
-    mode: 0755
-
-- name: Create prefixes folder if it does not exist
-  tags: install
-  file:
-    state: directory
-    path: /etc/bird/ipv6/prefixes
-    mode: 0755
-
-- name: Configure ipv6/prefixes/anycast.conf Template
-  tags: configure
-  template:
-    src: "{{ ANYCASTCONFIG }}"
-    dest: /etc/bird/ipv6/prefixes/anycast.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-  when: DISABLE_ANYCAST is not defined
-
-- name: Configure ipv6/peers/transit.conf Template
-  tags: configure
-  template:
-    src: "{{ TRANSITCONFIG }}"
-    dest: /etc/bird/ipv6/peers/transit.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Configure ipv6/peers/static.conf Template
-  tags: configure
-  template:
-    src: "{{ STATICCONFIG }}"
-    dest: /etc/bird/ipv6/peers/static.conf
-    owner: bird
-    group: bird
-  notify: bird_service
-
-- name: Configure ipv6/prefixes/mynet.conf Template
-  tags: configure
-  template:
-    src: "{{ MYNETCONFIG }}"
-    dest: /etc/bird/ipv6/prefixes/mynet.conf
-    owner: bird
-    group: bird
-  notify: bird_service

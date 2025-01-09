@@ -1,22 +1,14 @@
 - name: bird_reconfig
   tags: reconfig
   ansible.builtin.command:
-    cmd: "birdc6 c"
+    cmd: "/sbin/birdc c"
 
 - name: bird_service
   service: 
-    name: bird6
+    name: bird
     state: restarted
     enabled: yes
   notify: bird_reconfig
-
-- name: interfaces
-  tags: interfaces
-  command:
-    cmd: "ifup lo:{{ ANYCAST_LOOP }}"
-  loop: "{{ ANYCAST_ADDRESS }}"
-  loop_control:
-    index_var: ANYCAST_LOOP
 
 - name: sshd_restart
   service:
@@ -24,3 +16,5 @@
     state: restarted
     enabled: yes
     
+- name: reboot
+  reboot:

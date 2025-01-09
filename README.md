@@ -1,9 +1,8 @@
 Ansible Role: Bird
 =========
 
-This is a very "proprietary" role that will configure a server for BGP routing with a pre-configured transit. For now, it is IPv6 only. 
+A Ansible role to deploy the BIRD2 routing daemon to Debian Linux.
 
-This bird config was created by Wim. All credits goes to him. He runs alot of services, for example forhosting.nl or AS38230.
 
 What this does
 ---------------
@@ -11,143 +10,103 @@ What this does
 This role is very much custom configured to my needs. However, it could be easily adapted.
 
 - Installs bird and other useful packages `(e.g. curl, mtr, htop)`
-- Creates Loopback interfaces for routing `(Routing prefix & Anycast)`
-- Deploys OSPF neighbors `(WILL NOT CONFIGURE TUNNELS)`
 - Deploys transit BGP config with custom parameters including communities for both normal and anycast prefixes.
+- Deploys BGP Communities
+- Deploys custom anycasting export filters (See: templates/*.conf)
 - Deploys custom systctl rules
 - Modifies interfaces file to read Loopback configurations AFTER initial network.
 - Configures bird and enables systemd service
 
-Limitations
+What this doesn't do
 -----------
 
-I may fix these with time, tunnels for OSPF neighbors seems very hard. 
-
-- IPv6 Only
-- Won't create tunnels for OSPF neighbors
-- Won't create IBGP sessions
-- Requires you to list the number of loopback interfaces `loopback_interfaces` in this example 1 through 4 as there are 4 interfaces in `templates/bgp_interfaces.conf`
+- IPv4 Routing
+- OSPF/RIP etc
+- IBGP
+- RouterID (This is an IPv4 thing... it will default to the first none LO IP it finds)
 
 Requirements
 ------------
 
 A system running Debian 10/11/12. 
 
-If you intend to use the OSPF configuration, it will need links created (either VPN or physical) with the name of the interface corresponding to the ADJACENT_ROUTERS dictionary
-
 Role Variables
 --------------
 
-### Group Vars:
+All of these variables can be designated to the host, or to a group. Considering limitations by implementing group level, however.
 
-| Name           | Type    | Example           |
-|----------------|---------|-------------------|
-|ROUTERASN       | string  | 136918            |
-|CASN            | string  | 65000             |
-|SHARECONFIG     | string  | config.conf       |
-|BIRDCONFIG      | string  | bird6.conf        |
-|PROTOCOLSCONFIG | string  | protocols.conf    |
-|FILTERSCONFIG   | string  | filters.conf      | 
-|TRANSITCONFIG   | string  | transit.conf      |
-|STATICCONFIG    | string  | static.conf       |
-|MYNETCONFIG     | string  | mynet.conf        |
-|ANYCASTCONFIG   | string  | anycast.conf
-|PFXMIN          | int     | 48                |
-|SUBNET          | string  | 10.40.0.0/16
-|loopback_interfaces| list | - 1\n- 2\n-3      |
-|sysctl_config   | dictionary| net.ipv4.ip_forward: 1|
-
-
-### Host Vars:
-
-| Name   | Type    |  Example    |
-|--------|---------|-------------|
-|TRANSITIP| string | 2600::      |
-|MYIP    | string  | 2a0e:46c4:22a2::|
-|MYNET   | multi-line string | 2a05:1082:5::/48, 2a0e:46c4:2269::/48, ... |
-|TRANSITASN| string| 34927       |
-|TRANSIT_NAME|string| iFog       |
-|ROUTERID   | string | 10.51.1.3 |
-|NODEID   | int     | 3          |
-|ADJACENT_ROUTERS| dictionary|at1: 6\nat2: 7   |
-|ANYCAST_ADDRESS | multi-line string | 2a05:1082:5::/48, 2a05:1082:1::/48 |
-|COMMUNITIES | multi-line string| bgp_path.prepend(136918)|
-|COMMUNITIES_ANYCAST | multi-line string | bgp_path.prepend(136918)|
-|CUSTOM_STATIC | multi-line string | route <prefix> via <address>;|
-|CUSTOM_TRANSIT | multi-line string | multihop 2;|
+Please review variables.md
 
 Dependencies
 ------------
 
 There are no dependencies for this role
 
+Notes
+------------
+
+This is prioritised for 4 byte ASN's. View communities.conf and filters.conf to see the quirks implied by this.
+
 Example Playbook
 ----------------
 
-HOST FILE:
 ```yaml
-    bgp_servers:
-      hosts:
-        AMS:
-          TRANSITIP: "2a0c:9a40:1070::1"
-          MYIP: "2a0e:46c4:22a2::"
-          TRANSITASN: "34927"
-          TRANSIT_NAME: "iFog_Transit"
-          ROUTERID: "10.51.1.3"
-          NODEID: "3"
-          ADJACENT_ROUTERS:
-            AMS: 6
-            FRA: 5
-            SGP: 100
-          CUSTOM_STATIC: 
-          COMMUNITIES: 
-          COMMUNITIES_ANYCAST:  |
-            bgp_path.prepend(136918);
-            bgp_community.add((34927,9120)); # Do not export OF
-            bgp_community.add((34927,9110)); # Do not export MFB FRA
-            bgp_community.add((34927,9150)); # Do not export Asympto FRA
-            bgp_community.add((34927,9560)); # Do not export LibertyGlobal
-            bgp_community.add((34927,9480)); # Do not export RETN FRA
-            bgp_community.add((34927,9500)); # Do not export DT FRA
-            bgp_community.add((34927,9480)); # Do not export GTT FRA
-            bgp_community.add((34927,9300)); # Do not export DE-CIX FRA
-            bgp_community.add((34927,9310)); # Do not export KleyReX FRA
-            bgp_community.add((34927,9320)); # Do not export LocIX FRA
-            bgp_community.add((34927,9340)); # Do not export EVIX FRA
-            bgp_community.add((34927,9390)); # Do not export DE-CIX MUC FRA
-            bgp_community.add((34927,9400)); # Do not export LocIX DUS FRA
-            bgp_community.add((34927,9410)); # Do not export DE-CIX DUS FRA
-            bgp_community.add((34927,9420)); # Do not export DE-CIX HAM FRA
-            bgp_community.add((34927,9500)); # Do not export DE-CIX MAD FRA
-            bgp_community.add((34927,9450)); # Do not export STACIX FRA
-            bgp_community.add((34927,9630)); # Do not export FogIXP
-            bgp_community.add((34927,9570)); # Do not export WD6 
-```
-
-PLAYBOOK:
-```yaml
-- hosts: bgp_servers
-  become: true
+---
+- name: Test
+  hosts: localhost
   vars:
-    ROUTERASN: "136918"
-    CASN: "136918"
-    SHARECONFIG: "config.conf"
-    BIRDCONFIG: "bird6.conf"
-    PROTOCOLSCONFIG: "protocols.conf"
-    FILTERSCONFIG: "filters.conf"
-    TRANSITCONFIG: "transit.conf"
-    STATICCONFIG: "static.conf"
-    MYNETCONFIG: "mynet.conf"    
-    PFXMIN: "48"
-    SUBNET: "10.40.0.0/16"
-    loopback_interfaces:
-      - 1
-      - 2
-      - 3
-      - 4
-    systctl_config:
-      net.ipv4.icmp_errors_use_inbound_ifaddr: 0
-      net.ipv4.fib_multipath_hash_policy: 1
+    MYIP: "2a0e:46c4:22a7::"
+    ROUTERASN: "216126"
+    GLOBAL_ANYCAST_ADDRESS:
+      - 2a05:1082:1::/48
+      - 2a05:1082:5::/48
+    UK_ANYCAST_ADDRESS:
+      - 2a0e:46c4:2268::/48
+    EU_ANYCAST_ADDRESS:
+      - 2a0e:46c4:2269::/48
+    BGP_SESSIONS:
+      Transit_AS34927:
+        TRANSIT_ASN: "34927"
+        TRANSIT_IP: "2a0e:46c4:22a2::1"
+        MULTIHOP: 5
+        PASSWORD: "test"
+        PREF: 50
+        GLOBAL_ANYCAST: true
+        EU_ANYCAST: true
+        UK_ANYCAST: true
+        ANYCAST_COMMUNITIES:
+          GLOBAL:
+            34927:
+              - 101
+              - 102
+              - 103
+            1001:
+              - 10
+          EU:
+            34927:
+              - 1001
+              - 201
+          UK:
+            34927:
+              - 100001
+        ANYCAST_LARGE_COMMUNITIES:
+          GLOBAL:
+            34927:
+              101:
+                - 100
+          EU:
+            34928:
+              102:
+                - 101
+          UK:
+            34929:
+              103:
+                - 102
+      Transit_IXP:
+        TRANSIT_ASN: "1001"
+        TRANSIT_IP: "2600::1"
+  roles:
+    - jamdoog.bird
 ```
 
 License

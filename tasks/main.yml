@@ -3,4 +3,3 @@
 - include_tasks: install_bird_templates.yml
 - include_tasks: install_tweaks.yml
 - include_tasks: install_interfaces.yml
-- include_tasks: install_ospf.yml
