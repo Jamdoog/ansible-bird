@@ -1,22 +1,30 @@
 ---
-- name: Remove Interfaces.d Reading From Start Of Interfaces
-  tags: install
-  lineinfile:
-    regexp: "/^source /etc/network/interfaces.d/*$/"
+- name: Check if interfaces exists
+  stat:
     path: /etc/network/interfaces
-    state: absent
+  register: interfaces_exists
 
-- name: Insert Interfaces.d Reading At End Of Interfaces
-  tags: install
-  lineinfile:
-    path: /etc/network/interfaces
-    line: "source /etc/network/interfaces.d/*.conf"
-
-- name: Install Loop Interface (interfaces.d)
-  tags: install
-  template:
-    src: "bgp_interfaces.conf"
-    dest: /etc/network/interfaces.d/bgp_interfaces.conf
-    owner: root
-    group: root
-  notify: reboot
+- name: Modify interfaces file if needed
+  block:
+  - name: Remove Interfaces.d Reading From Start Of Interfaces
+    tags: install
+    lineinfile:
+      regexp: "/^source /etc/network/interfaces.d/*$/"
+      path: /etc/network/interfaces
+      state: absent
+  
+  - name: Insert Interfaces.d Reading At End Of Interfaces
+    tags: install
+    lineinfile:
+      path: /etc/network/interfaces
+      line: "source /etc/network/interfaces.d/*.conf"
+  
+  - name: Install Loop Interface (interfaces.d)
+    tags: install
+    template:
+      src: "bgp_interfaces.conf"
+      dest: /etc/network/interfaces.d/bgp_interfaces.conf
+      owner: root
+      group: root
+    notify: reboot
+  when: interfaces_exists.stat.exists
