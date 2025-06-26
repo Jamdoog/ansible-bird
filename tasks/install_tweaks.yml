@@ -15,8 +15,8 @@
 
 - name: Add location if present
   set_fact:
-    BANNER_MOTD: "{{ BANNER_MOTD }} {{ ROUTERLOCATION }}"
-  when: ROUTERLOCATION is defined
+    BANNER_MOTD: "{{ BANNER_MOTD }} {{ ROUTERCITY }}"
+  when: ROUTERCITY is defined
 
 - name: Set banner
   shell: "/bin/figlet -w 115 -c {{ BANNER_MOTD }} > /etc/motd"
